@@ -147,7 +147,7 @@ async def solve_dependencies(
             solved = await call(**sub_values)
         else:
             loop = asyncio.get_event_loop()
-            solved = await loop.run_in_executor(None, functools.partial(call, event, **sub_values))
+            solved = await loop.run_in_executor(None, functools.partial(call, **sub_values))
 
         if sub_dependant.name is not None:
             values[sub_dependant.name] = solved
