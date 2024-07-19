@@ -89,6 +89,9 @@ def inject_traceparent(payload: Dict):
         logger.debug("Unable to inject traceparent. OTEL is not installed.")
         return
 
+    if isinstance(payload, BaseModel):
+        payload = payload.model_dump()
+
     if not isinstance(payload, dict):
         logger.debug("Unable to inject traceparent. Payload is not a dict")
         return

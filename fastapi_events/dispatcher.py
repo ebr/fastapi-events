@@ -292,7 +292,7 @@ def dispatch(
                 )
 
         # OTEL
-        if payload and isinstance(payload, dict):
+        if payload:
             logger.debug("Injecting traceparent to event payload...")
             inject_traceparent(payload=payload)
 
