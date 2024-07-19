@@ -9,6 +9,7 @@ from fastapi_events.constants import FASTAPI_EVENTS_USE_SPAN_LINKING_ENV_VAR
 from fastapi_events.otel import HAS_OTEL_INSTALLED, propagate, trace
 from fastapi_events.otel.attributes import SpanAttributes
 from fastapi_events.utils import strtobool
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +39,9 @@ def create_span_for_handle_fn(
         return empty_span()
 
     links, context = [], None
+
+    if isinstance(payload, BaseModel):
+        payload = payload.model_dump()
 
     # Extract span from remote context
     remote_ctx = propagate.extract(payload)
