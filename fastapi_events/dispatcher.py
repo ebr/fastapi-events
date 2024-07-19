@@ -264,6 +264,8 @@ def dispatch(
     # Handle dispatch without event_name specified
     if not event_name and isinstance(event_name_or_model, (str, Enum)):
         event_name = event_name_or_model
+    elif hasattr(event_name_or_model, "__event_name__"):
+        event_name = event_name_or_model.__event_name__
 
     with create_span_for_dispatch_fn(event_name=event_name):
         if HAS_PYDANTIC:
