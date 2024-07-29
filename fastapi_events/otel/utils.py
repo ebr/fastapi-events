@@ -9,7 +9,6 @@ from fastapi_events.constants import FASTAPI_EVENTS_USE_SPAN_LINKING_ENV_VAR
 from fastapi_events.otel import HAS_OTEL_INSTALLED, propagate, trace
 from fastapi_events.otel.attributes import SpanAttributes
 from fastapi_events.utils import strtobool
-from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -40,8 +39,10 @@ def create_span_for_handle_fn(
 
     links, context = [], None
 
-    if isinstance(payload, BaseModel):
+    if hasattr(payload, "model_dump"):  # handle Pydantic v2
         payload = payload.model_dump()
+    elif hasattr(payload, "dict"):    # handles Pydantic v1
+        payload = payload.dict()
 
     # Extract span from remote context
     remote_ctx = propagate.extract(payload)
@@ -89,8 +90,10 @@ def inject_traceparent(payload: Dict):
         logger.debug("Unable to inject traceparent. OTEL is not installed.")
         return
 
-    if isinstance(payload, BaseModel):
+    if hasattr(payload, "model_dump"):  # handle Pydantic v2
         payload = payload.model_dump()
+    elif hasattr(payload, "dict"):    # handles Pydantic v1
+        payload = payload.dict()
 
     if not isinstance(payload, dict):
         logger.debug("Unable to inject traceparent. Payload is not a dict")
