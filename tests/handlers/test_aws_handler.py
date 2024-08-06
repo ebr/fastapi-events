@@ -1,5 +1,5 @@
 import boto3
-from moto import mock_sqs
+from moto import mock_aws
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.requests import Request
@@ -11,7 +11,7 @@ from fastapi_events.handlers.aws import SQSForwardHandler
 from fastapi_events.middleware import EventHandlerASGIMiddleware
 
 
-@mock_sqs
+@mock_aws
 def test_aws_sqs_handler():
     def setup_app():
         app = Starlette(middleware=[
