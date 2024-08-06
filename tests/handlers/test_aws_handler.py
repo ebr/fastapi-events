@@ -1,5 +1,10 @@
 import boto3
-from moto import mock_aws
+
+try:
+    from moto import mock_sqs as mock_aws  # moto<=4
+except ImportError:
+    from moto import mock_aws  # moto>=5
+
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.requests import Request
